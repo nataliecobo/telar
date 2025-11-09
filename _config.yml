@@ -2,13 +2,13 @@
 # https://github.com/UCSB-AMPLab/telar
 
 # Site Settings
-title: Images from the Spanish colonial Philippines
+title: Political imagery from the Spanish colonial Philippines
 description: "This site explores a number of revealing images from the Spanish colonial Philippines. It is built with Telar (Spanish for 'loom'), a storytelling platform developed by Neogranadina and the UT and UCSB AMP Labs."
 baseurl: "/telar"
 url: "https://nataliecobo.com"
 author: "Natalie Cobo"
 email: ""
-telar_theme: "neogranadina" # Options: paisajes, neogranadina, santa-barbara, austin, or custom
+telar_theme: "santa-barbara" # Options: paisajes, neogranadina, santa-barbara, austin, or custom
 logo: "" # Path to logo image (optional)
 telar_language: "en" # Options: "en" (English), "es" (Español)
 
