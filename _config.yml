@@ -2,13 +2,13 @@
 # https://github.com/UCSB-AMPLab/telar
 
 # Site Settings
-title: Telar
-description: "Telar (Spanish for 'loom') is a static site generator built on Jekyll that weaves together IIIF images, text, and layered contextual information into interactive digital narrative exhibitions. <a href='https://github.com/UCSB-AMPLab/telar'>Telar</a> is a project of <a href='https://neogranadina.org'>Neogranadina</a> and the Archives, Memory, and Preservation Labs at <a href='https://ampl.clair.ucsb.edu/'>UC Santa Barbara</a> and <a href='https://liberalarts.utexas.edu/history/'>UT Austin</a>."
+title: Images from the Spanish colonial Philippines
+description: "This site explores a number of revealing images from the Spanish colonial Philippines. It is built with Telar (Spanish for 'loom'), a storytelling platform developed by Neogranadina and the UT and UCSB AMP Labs."
 baseurl: "/telar"
-url: "https://ampl.clair.ucsb.edu"
-author: ""
+url: "https://nataliecobo.com"
+author: "Natalie Cobo"
 email: ""
-telar_theme: "paisajes" # Options: paisajes, neogranadina, santa-barbara, austin, or custom
+telar_theme: "neogranadina" # Options: paisajes, neogranadina, santa-barbara, austin, or custom
 logo: "" # Path to logo image (optional)
 telar_language: "en" # Options: "en" (English), "es" (Español)
 
@@ -29,14 +29,13 @@ telar_language: "en" # Options: "en" (English), "es" (Español)
 #    - If running locally: Run `python3 scripts/fetch_google_sheets.py` before building
 google_sheets:
   enabled: true
-  shared_url: "https://docs.google.com/spreadsheets/d/18dJWy9wkLD7Muokigg4wp85c3Vsjuphdrn0g51pwkGY/edit"
-  published_url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vT9eeRoyQCr1j-1uDaWBm-rgZNXtn9A-mepL0I4dqDTx2-E_6gbVD-8x0DYDVhppiAzrFpd20_9cr3z/pubhtml"
+  shared_url: "https://docs.google.com/spreadsheets/d/1PnMdx3XCp2u2mFJY0N67V4FyVdsL--2ZOfnWyJrf7OI/edit"
+  published_url: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQoKyjdRduYmr1UIHJj8AL64ROMNy3UA06UXKotKTIfny4Kpx4dtw4qBK9Oe5gaUGCdDH3MhdXx3UYj/pubhtml"
 
 # Story Interface Settings
 story_interface:
   show_story_steps: true # Set to false to hide "Step X" overlay in stories
   include_demo_content: false # v0.5.0 feature - demo stories from external repository
-
 
 #
 #
