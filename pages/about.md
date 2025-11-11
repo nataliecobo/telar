@@ -10,7 +10,7 @@ This is a small demo site built by me, Natalie Cobo, for students and scholars a
 
 # About Telar
 
-Telar (Spanish for 'loom') is a static site generator built on Jekyll that weaves together IIIF images, text, and layered contextual information into interactive digital narrative exhibitions. Learn more at [the Telar website](https://ampl.clair.ucsb.edu/telar)
+Telar (Spanish for 'loom') is a static site generator built on Jekyll that weaves together IIIF images, text, and layered contextual information into interactive digital narrative exhibitions. Learn more at [the Telar website](https://ampl.clair.ucsb.edu/telar).
 
 For more information, visit the [Telar GitHub repository](https://github.com/UCSB-AMPLab/telar).
 
