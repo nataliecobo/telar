@@ -9,8 +9,8 @@ location: "Museo del Oro"
 credit: "Museo del Oro, Bogotá. Registration Number: O08319"
 thumbnail: ""
 iiif_manifest: ""
-object_warning: ""
-object_warning_short: ""
+object_warning: "No image source found for object 'example-muisca-goldwork'. Add either: (1) an IIIF manifest URL in the iiif_manifest column, or (2) an image file to components/images/objects/example-muisca-goldwork.jpg"
+object_warning_short: "Missing image source"
 layout: object
 ---
 

@@ -11,7 +11,8 @@
     "location": "",
     "credit": "",
     "thumbnail": "",
-    "object_warning": ""
+    "object_warning": "",
+    "object_warning_short": NaN
   },
   {
     "object_id": "example-bogota-1614",
@@ -25,7 +26,8 @@
     "location": "Archivo General de Indias",
     "credit": "Archivo General de Indias, Seville",
     "thumbnail": "",
-    "object_warning": ""
+    "object_warning": "No image source found for object 'example-bogota-1614'. Add either: (1) an IIIF manifest URL in the iiif_manifest column, or (2) an image file to components/images/objects/example-bogota-1614.jpg",
+    "object_warning_short": "Missing image source"
   },
   {
     "object_id": "example-muisca-goldwork",
@@ -39,7 +41,8 @@
     "location": "Museo del Oro",
     "credit": "Museo del Oro, Bogotá. Registration Number: O08319",
     "thumbnail": "",
-    "object_warning": ""
+    "object_warning": "No image source found for object 'example-muisca-goldwork'. Add either: (1) an IIIF manifest URL in the iiif_manifest column, or (2) an image file to components/images/objects/example-muisca-goldwork.jpg",
+    "object_warning_short": "Missing image source"
   },
   {
     "object_id": "example-ceramic-figure",
@@ -53,7 +56,8 @@
     "location": "Museo del Oro",
     "credit": "Museo del Oro, Bogotá",
     "thumbnail": "",
-    "object_warning": ""
+    "object_warning": "No image source found for object 'example-ceramic-figure'. Add either: (1) an IIIF manifest URL in the iiif_manifest column, or (2) an image file to components/images/objects/example-ceramic-figure.jpg",
+    "object_warning_short": "Missing image source"
   },
   {
     "object_id": "example-piedrahita-title_page",
@@ -67,6 +71,7 @@
     "location": "",
     "credit": "",
     "thumbnail": "",
-    "object_warning": ""
+    "object_warning": "",
+    "object_warning_short": NaN
   }
 ]

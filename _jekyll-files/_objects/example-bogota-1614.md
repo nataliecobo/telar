@@ -9,8 +9,8 @@ location: "Archivo General de Indias"
 credit: "Archivo General de Indias, Seville"
 thumbnail: ""
 iiif_manifest: ""
-object_warning: ""
-object_warning_short: ""
+object_warning: "No image source found for object 'example-bogota-1614'. Add either: (1) an IIIF manifest URL in the iiif_manifest column, or (2) an image file to components/images/objects/example-bogota-1614.jpg"
+object_warning_short: "Missing image source"
 layout: object
 ---
 
