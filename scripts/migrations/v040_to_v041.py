@@ -89,6 +89,7 @@ class Migration040to041(BaseMigration):
 
         framework_files = {
             # Layouts - mobile code restoration and coordinate picker
+            '_layouts/index.html': 'Updated index layout (site description link styling)',
             '_layouts/object.html': 'Updated object layout (coordinate picker buttons)',
             '_layouts/story.html': 'Updated story layout (mobile responsive features restored)',
 
@@ -100,6 +101,7 @@ class Migration040to041(BaseMigration):
 
             # Documentation
             'CHANGELOG.md': 'Updated CHANGELOG',
+            'README.md': 'Updated README (supporter acknowledgments)',
         }
 
         for file_path, success_msg in framework_files.items():
@@ -131,6 +133,16 @@ class Migration040to041(BaseMigration):
         modified = False
 
         # Check if critical comments are missing and restore them
+
+        # 0. Restore top header comments if missing
+        if '# Telar - Digital Storytelling Framework' not in content:
+            # Add header at the very top if not present
+            if not (lines[0].startswith('# Telar') or lines[0].startswith('title:')):
+                lines.insert(0, '# Telar - Digital Storytelling Framework')
+                lines.insert(1, '# https://github.com/UCSB-AMPLab/telar')
+                lines.insert(2, '')
+                modified = True
+                changes.append("Restored top header comments")
 
         # 1. Restore "Site Settings" header if missing
         if '# Site Settings' not in content and 'title:' in content:
@@ -276,35 +288,52 @@ class Migration040to041(BaseMigration):
                         changes.append("Restored WEBrick configuration comment")
                         break
 
-        # 12. Restore "Development & Testing" header if missing
-        if '# Development & Testing' not in content and 'testing-features:' in content:
+        # 12. Restore "Development & Testing" section if missing
+        if 'testing-features:' not in content:
+            # Section doesn't exist at all - add it after webrick section
             for i, line in enumerate(lines):
-                if 'testing-features:' in line:
-                    if i == 0 or '# Development & Testing' not in lines[i-1]:
-                        lines.insert(i, '')
-                        lines.insert(i+1, '# Development & Testing')
-                        lines.insert(i+2, '# Set to false or remove for production use')
-                        modified = True
-                        changes.append("Restored 'Development & Testing' header comment")
-                        break
-
-        # 13. Restore "Christmas Tree Mode" comment if missing
-        if '# Christmas Tree Mode' not in content and 'christmas_tree_mode:' in content:
-            for i, line in enumerate(lines):
-                if 'christmas_tree_mode:' in line:
-                    # Check previous lines for the comment
-                    has_comment = False
-                    for j in range(max(0, i-3), i):
-                        if '# Christmas Tree Mode' in lines[j]:
-                            has_comment = True
+                if line.strip().startswith('Access-Control-Allow-Headers:'):
+                    # Find end of webrick section, add testing-features
+                    lines.insert(i+1, '')
+                    lines.insert(i+2, '# Development & Testing')
+                    lines.insert(i+3, '# Set to false or remove for production use')
+                    lines.insert(i+4, 'testing-features:')
+                    lines.insert(i+5, '  # Christmas Tree Mode - Displays all warning messages for testing multilingual support')
+                    lines.insert(i+6, '  # Set to true to light up the site with test warnings (test objects, fake errors, etc.)')
+                    lines.insert(i+7, '  christmas_tree_mode: false')
+                    modified = True
+                    changes.append("Added 'Development & Testing' section with testing-features")
+                    break
+        else:
+            # Section exists, just restore comments if missing
+            if '# Development & Testing' not in content:
+                for i, line in enumerate(lines):
+                    if 'testing-features:' in line:
+                        if i == 0 or '# Development & Testing' not in lines[i-1]:
+                            lines.insert(i, '')
+                            lines.insert(i+1, '# Development & Testing')
+                            lines.insert(i+2, '# Set to false or remove for production use')
+                            modified = True
+                            changes.append("Restored 'Development & Testing' header comment")
                             break
 
-                    if not has_comment:
-                        lines.insert(i, '  # Christmas Tree Mode - Displays all warning messages for testing multilingual support')
-                        lines.insert(i+1, '  # Set to true to light up the site with test warnings (test objects, fake errors, etc.)')
-                        modified = True
-                        changes.append("Restored Christmas Tree Mode comment")
-                        break
+            # 13. Restore "Christmas Tree Mode" comment if missing
+            if '# Christmas Tree Mode' not in content and 'christmas_tree_mode:' in content:
+                for i, line in enumerate(lines):
+                    if 'christmas_tree_mode:' in line:
+                        # Check previous lines for the comment
+                        has_comment = False
+                        for j in range(max(0, i-3), i):
+                            if '# Christmas Tree Mode' in lines[j]:
+                                has_comment = True
+                                break
+
+                        if not has_comment:
+                            lines.insert(i, '  # Christmas Tree Mode - Displays all warning messages for testing multilingual support')
+                            lines.insert(i+1, '  # Set to true to light up the site with test warnings (test objects, fake errors, etc.)')
+                            modified = True
+                            changes.append("Restored Christmas Tree Mode comment")
+                            break
 
         if modified:
             self._write_file(config_path, '\n'.join(lines))
