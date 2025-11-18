@@ -2,6 +2,226 @@
 
 All notable changes to Telar will be documented in this file.
 
+## [0.5.0-beta] - 2025-11-17
+
+### Added
+
+#### Canvas LMS Embedding Support
+- **Complete iframe embedding system** for educational and blog platforms (Canvas, Moodle, Blackboard, WordPress, Squarespace, Wix)
+- **Embed mode detection** via `?embed=true` URL parameter with automatic UI adjustments
+- **Forced navigation buttons** on all viewports including desktop with custom positioning and responsive typography
+- **"View full site" dismissible banner** with multilingual support and frosted glass effect
+- **Successfully tested** in production Canvas LMS with cross-browser and mobile testing complete
+- **Comprehensive documentation** with educator guide and troubleshooting section
+
+#### Share & Embed UI
+- **Share button component** with OS-specific icons and three variants (story page, navbar, icon-only)
+- **Share panel modal** with two tabs: Share Links (clean URLs) and Embed Code (8 dimension presets)
+- **Platform presets**: Canvas (100% × 800px), Moodle/Blackboard (100% × 700px), WordPress (100% × 600px), Squarespace (100% × 600px), Wix (100% × 550px), Mobile (375px × 500px), Fixed (800 × 600), Custom
+- **Copy to clipboard** with visual feedback for both share URLs and embed codes
+- **Full multilingual support** (English + Spanish) with platform documentation links
+
+#### Extended Image Format Support
+- **Native support** for HEIC (iPhone photos), WebP, and TIFF formats
+- **Case-insensitive extension matching** (`.JPG`, `.png`, `.HEIC` all work)
+- **Automatic JPEG conversion** during IIIF tile generation with original file preservation
+- **Handles transparency** (RGBA, LA modes) and palette modes with proper conversion
+- **Eliminates false warnings** for uppercase file extensions
+
+#### Automatic Carousel Height Detection
+- **Build-time dimension analysis** using PIL/Pillow with zero runtime cost
+- **Four size classes**: Compact (400px), Default (550px), Tall (700px), Portrait (850px)
+- **Automatic assignment** based on maximum aspect ratio in carousel
+- **Eliminates manual configuration** for carousel heights
+
+#### Responsive Typography for Slide-Over Panels
+- **Extended fluid typography** from story steps to all panel contents using CSS `clamp()`
+- **Max-width constraints** for panel images on narrow screens
+- **Improved readability** across all device sizes
+
+#### Mobile Panel Quality-of-Life Improvements
+- **Scrollable story steps** prevent navigation button cutoff (changed `overflow: hidden` to `overflow-y: auto`)
+- **Panel image width constraints** force `max-width: 100%` on mobile (≤768px) while preserving desktop sizing
+
+#### Carousel Widget Styling Improvements
+- **Captions moved below images** for better accessibility
+- **Black container background** for better image contrast
+- **Reduced typography** (0.9rem text, 0.8rem credit) with indicators positioned above captions
+- **Disabled keyboard navigation** to prevent story navigation interference
+
+#### Future Media Type Directory Structure
+- **Placeholder directories** with READMEs: `components/pdfs/` (v0.6.0), `components/audio/` (v0.7.0), `components/3d-models/` (v0.8.0)
+- **Prevents incompatible implementations** before official support
+
+#### Version Headers in All Code Files
+- **All scripts, styles, and workflows** now include version headers for better tracking
+- **Format**: `Version: v0.5.0-beta` (Python/YAML) or `@version v0.5.0-beta` (JS/CSS)
+
+### Changed
+
+#### Flattened Image Directory Structure
+- **Removed subdirectories**: `components/images/objects/` and `components/images/additional/` → `components/images/`
+- **Updated default paths** in csv_to_json.py, generate_iiif.py, and validation
+- **Automated migration** via upgrade script
+
+#### CSV-Driven IIIF Tile Generation
+- **Changed from directory-based to CSV-driven**: Only processes objects in `objects.csv` without external manifests
+- **Automatic file detection** by `object_id` supporting multiple extensions (case-insensitive)
+- **Faster generation** with no orphaned tiles
+
+#### Unified source_url Column Name
+- **Renamed `iiif_manifest` → `source_url`** for future media type compatibility (PDFs, videos, 3D, audio)
+- **Full backward compatibility**: Both column names work, automatic aliasing in both directions
+- **Updated templates** with Liquid fallback pattern
+
+#### CSV-Aware GitHub Actions Monitoring
+- **Smart change detection** only triggers IIIF when changed images match object IDs in objects.csv
+- **Cache optimization** for more efficient CI/CD pipeline
+
+#### Removed Unused Dependencies
+- **Deleted scrollama.min.js and openseadragon.min.js** (~47KB savings) - Telar uses custom scroll system and UniversalViewer's bundled OpenSeadragon
+- **Deleted docs/google_sheets_integration/** folder - fully documented in official docs site
+
+### Fixed
+
+#### CRITICAL: v0.4.0 Feature Restoration (Phase 1 - Data Pipeline)
+- **Restored 1,382 lines** accidentally deleted from `csv_to_json.py` in commit f62acee (Nov 8, 2025)
+- **Root cause**: Commit overwrote file, removing core v0.4.0 functionality
+- **Features restored**:
+  - Widget processing (~350 lines): accordion, carousel, tabs with Bootstrap HTML generation
+  - IIIF metadata auto-population (~400 lines): extracts title, creator, period, location, credit
+  - Glossary auto-linking (~150 lines): `[[term_id]]` syntax processing
+  - Multilingual support (~100 lines): language string loading and interpolation
+- **Applied v0.5.0 updates** to restored code (version header, flattened image paths)
+
+#### CRITICAL: v0.4.0 Feature Restoration (Phase 2 - Display Components)
+- **Restored frontend components** for widgets and glossary (~115 lines total)
+- **Widget panel-specific styling**: Layer 1 widgets use Layer 2 colors and vice versa
+- **Enhanced glossary functionality**: Proper title extraction, both inline and index links work
+- **Widget initialization**: Added widgets.js script tag
+- **Glossary multilingual support**: Language-aware panel labels and "Key term:" prefix
+
+#### Layer 2 Panel Heading Colors
+- **Fixed h2, h3, h4 color inheritance** in layer 2 panels (white on dark purple background)
+
+#### Glossary Warning Message Clarity
+- **Improved error message formatting** for missing glossary terms with quoted, bold term IDs
+- **Added file path context** showing exactly which markdown file contains the broken reference
+- **Natural sentence structure** replaces technical phrasing for better readability
+- **Example**: "In the file stories/story2/step4-layer2.md, you reference the glossary term 'term', but this term does not exist in components/texts/glossary/"
+- Files modified: `scripts/csv_to_json.py`, `_data/languages/en.yml`, `_data/languages/es.yml`
+
+### Migration
+
+- **Automated v0.4.x → v0.5.0 migration**:
+  - File relocation: old subdirectories → `components/images/`
+  - CSV column update: `iiif_manifest` → `source_url`
+  - Name conflict detection and empty directory cleanup
+- **Full backward compatibility**: No breaking changes for existing sites
+
+---
+
+## [0.4.3-beta] - 2025-11-15
+
+### Fixed
+
+#### v0.4.1 Migration Script Comment Restoration
+- **Complete framework comments restored**: Migration now restores all missing comments in _config.yml
+- **Top header comments**: Framework title and GitHub URL now restored at file beginning
+- **Complete testing-features section**: Entire section created if missing (not just comments)
+- **Impact**: Sites upgrading from v0.3.4 through multiple versions now have complete config structure
+- Files modified: `scripts/migrations/v040_to_v041.py`
+
+#### iPad Touch Scrolling for Story Navigation
+- **Touch navigation support**: iPad and touch devices can now navigate stories using swipe gestures
+- **Desktop viewport mode**: Fixes issue where touch scrolling didn't trigger story step changes
+- **Swipe to navigate**: Swipe up for next step, swipe down for previous step
+- **Respects cooldowns**: Same 600ms cooldown as mouse/trackpad scrolling
+- Files modified: `assets/js/story.js` (added touch event handlers)
+
+#### IIIF Regeneration on Config Changes
+- **Automatic regeneration**: IIIF tiles now regenerate when _config.yml changes
+- **Prevents broken images**: Fixes issue where baseurl changes caused image serving failures
+- **Smart detection**: Added _config.yml to change detection pattern in build workflow
+- Thanks to Tara for reporting this issue
+- Files modified: `.github/workflows/build.yml` (updated change detection pattern)
+
+#### EXIF Orientation Handling in IIIF Generation
+- **Portrait photos now display correctly**: Images from phones/cameras no longer appear rotated 90 degrees
+- **EXIF metadata respected**: Script now applies EXIF orientation data before generating IIIF tiles
+- **User experience**: Students can upload phone photos directly without manual rotation
+- **Visual feedback**: Console displays "↻ Applied EXIF orientation correction" when rotation is applied
+- Thanks to Tara for helping spot this issue
+- Files modified: `scripts/generate_iiif.py` (both `generate_iiif_for_image()` and `copy_base_image()`)
+
+---
+
+## [0.4.2-beta] - 2025-11-09
+
+### Added
+
+#### Smart IIIF Change Detection
+- **Automatic optimization**: Build workflow now intelligently detects when IIIF tile regeneration is needed
+- **Git diff-based detection**: Compares changed files between commits to determine if images or objects.csv changed
+- **Manual override**: Workflow dispatch includes "Force IIIF tile regeneration" checkbox (default: checked for safety)
+- **Multiple failsafes**: Defaults to full build on first commit, detection errors, or uncertain cases
+- **GitHub Actions caching**: IIIF tiles cached between builds to prevent deletion when skipping regeneration
+- **Cache key strategy**: Automatically invalidates cache when image files change using hash-based keys
+- **Time savings**: Faster deployments for content-only changes (stories, text, metadata)
+- **User experience**: Silent optimization for automatic builds, explicit control for manual triggers
+
+**How it works**:
+- Automatic builds (push to main): Detects file changes, skips IIIF if only content changed
+- Manual builds: User checkbox to skip IIIF regeneration (safe default always regenerates)
+- Cache system: Tiles saved after generation, restored when skipping, automatically invalidated on image changes
+
+**Technical details**:
+- Detection step runs before IIIF generation
+- Checks `git diff --name-only HEAD~1 HEAD` for changed files
+- Triggers IIIF when: images in `components/images/objects/` or `objects.csv` changed
+- Skips IIIF when: Only content files changed (stories, glossary, configs, layouts, etc.)
+- Cache operations: restore → generate (if needed) → save → restore to _site (if skipped)
+
+### Fixed
+
+#### CRITICAL: IIIF Tile Deletion When Skipping Regeneration
+- **Root cause identified**: GitHub Actions workflows are ephemeral - each run starts fresh with no IIIF tiles
+- **Problem**: Skipping IIIF generation left `_site/iiif/objects/` empty, deployment replaced entire site, deleting live tiles
+- **Solution**: GitHub Actions cache system preserves tiles between workflow runs
+- **Cache strategy**:
+  - Restore cache after Jekyll build
+  - Generate and cache tiles (if needed)
+  - Restore cached tiles to `_site/` when skipping regeneration
+  - Cache key based on image directory hash for automatic invalidation
+- **Safety features**: Warns if cache unavailable, logs all cache operations, fails gracefully
+- **Testing**: Confirmed working on demo site (ampl.clair.ucsb.edu/telar)
+- **Impact**: Critical fix prevents tile deletion, enables safe optimization
+
+#### Mobile Navbar Title Wrapping
+- Long site titles now wrap naturally on mobile devices instead of overflowing or being cut off
+- Hamburger menu right-aligned for better mobile UX
+- Flexbox properties adjusted for proper text flow on small screens
+
+#### Mobile Font Size Adjustments
+- Added `white-space: normal` to allow proper text wrapping
+- Reduced display-4 font size on mobile for better readability
+- Works in conjunction with existing height-based responsive design
+
+#### Site Title Wrapping on Mobile
+- CSS rules added to enable proper text wrapping for site titles
+- Ensures titles display cleanly across all mobile screen sizes
+- Tested with various title lengths on different devices
+
+#### Site Description Link Styling
+- Fixed link styling on home page for consistent appearance
+- Proper theme color application to site description links
+
+### Changed
+- Build workflow now includes smart IIIF detection and caching (4 new steps, ~76 lines added)
+- Migration framework updated with `README.md` and `index.html` for complete v0.4.1 upgrades
+
+---
+
 ## [0.4.1-beta] - 2025-11-08
 
 ### Fixed
