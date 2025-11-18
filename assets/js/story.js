@@ -1,6 +1,8 @@
 /**
  * Telar Story - UniversalViewer + Step-Based Navigation
  * Handles card-stacking interactions for story pages
+ *
+ * @version v0.5.0-beta
  */
 
 // Step navigation
@@ -21,6 +23,13 @@ let objectsIndex = {}; // Quick lookup for object data
 let isPanelOpen = false; // Track if any panel is open
 let scrollLockActive = false; // Track if scroll-lock is active
 
+// Touch navigation for iPad/tablets in desktop mode (v0.4.3)
+// Handles swipe gestures to navigate between story steps
+// Note: Mobile viewports (<768px) use button navigation instead
+let touchStartY = 0;  // Y coordinate where touch started
+let touchEndY = 0;    // Y coordinate where touch ended
+const TOUCH_THRESHOLD = window.innerHeight * 0.2; // 20vh swipe distance required to trigger step change
+
 // Viewer card management
 let viewerCards = []; // Array of { objectId, element, uvInstance, osdViewer, isReady, pendingZoom }
 let viewerCardCounter = 0;
@@ -39,12 +48,19 @@ document.addEventListener('DOMContentLoaded', function() {
   buildObjectsIndex();
   initializeFirstViewer();
 
-  // Check if mobile and initialize appropriate navigation
+  // Determine navigation mode based on viewport and embed status
+  // v0.5.0: Separate embed and mobile navigation modes
   isMobileViewport = window.innerWidth < 768;
+  const isEmbedMode = window.telarEmbed?.enabled || false;
 
-  if (isMobileViewport) {
+  if (isEmbedMode) {
+    // Embed mode: button navigation for iframe/Canvas LMS compatibility
+    initializeEmbedNavigation();
+  } else if (isMobileViewport) {
+    // Mobile mode: button navigation for mobile viewports
     initializeMobileNavigation();
   } else {
+    // Desktop mode: scroll-based navigation
     initializeStepController();
   }
 
@@ -277,9 +293,10 @@ function getManifestUrl(objectId) {
     return buildLocalInfoJsonUrl(objectId);
   }
 
-  // If object has iiif_manifest field and it's not empty, use it
-  if (object.iiif_manifest && object.iiif_manifest.trim() !== '') {
-    return object.iiif_manifest;
+  // Check for external source URL (source_url or iiif_manifest for backward compatibility)
+  const sourceUrl = object.source_url || object.iiif_manifest;
+  if (sourceUrl && sourceUrl.trim() !== '') {
+    return sourceUrl;
   }
 
   // Otherwise use local IIIF
@@ -307,8 +324,79 @@ function buildLocalInfoJsonUrl(objectId) {
 }
 
 /**
+ * Create navigation button DOM elements
+ * Shared by mobile and embed modes
+ * @returns {Object|null} { container, prev, next } DOM elements, or null if already exists
+ */
+function createNavigationButtons() {
+  // Guard against duplicate initialization
+  if (document.querySelector('.mobile-nav')) {
+    console.warn('Navigation buttons already exist, skipping creation');
+    return null;
+  }
+
+  const navContainer = document.createElement('div');
+  navContainer.className = 'mobile-nav';
+
+  const prevButton = document.createElement('button');
+  prevButton.className = 'mobile-prev';
+  prevButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>';
+  prevButton.setAttribute('aria-label', 'Previous step');
+
+  const nextButton = document.createElement('button');
+  nextButton.className = 'mobile-next';
+  nextButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor"><path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z"/></svg>';
+  nextButton.setAttribute('aria-label', 'Next step');
+
+  navContainer.appendChild(prevButton);
+  navContainer.appendChild(nextButton);
+  document.body.appendChild(navContainer);
+
+  return { container: navContainer, prev: prevButton, next: nextButton };
+}
+
+/**
+ * Initialize button navigation for embed mode
+ * Uses mobile-style button navigation for iframe/Canvas LMS compatibility
+ * Preserves desktop-style layout and vertical centering
+ * v0.5.0: Canvas LMS / iframe embedding
+ */
+function initializeEmbedNavigation() {
+  console.log('Initializing embed button navigation');
+
+  // Get all story steps
+  allSteps = Array.from(document.querySelectorAll('.story-step'));
+
+  // Hide all steps initially
+  allSteps.forEach(step => {
+    step.classList.remove('mobile-active');
+  });
+
+  // Show first step (intro)
+  if (allSteps.length > 0) {
+    allSteps[0].classList.add('mobile-active');
+    currentMobileStep = 0;
+  }
+
+  // Create navigation buttons (shared helper)
+  const buttons = createNavigationButtons();
+  if (!buttons) return; // Already initialized
+
+  mobileNavButtons = { prev: buttons.prev, next: buttons.next };
+
+  // Add click handlers
+  buttons.prev.addEventListener('click', goToPreviousMobileStep);
+  buttons.next.addEventListener('click', goToNextMobileStep);
+
+  // Initialize button states
+  updateMobileButtonStates();
+
+  console.log(`Embed navigation initialized with ${allSteps.length} steps`);
+}
+
+/**
  * Initialize Mobile Button Navigation
- * For mobile viewports, uses button-based navigation instead of scroll
+ * For mobile viewports (<768px), uses button-based navigation instead of scroll
  */
 function initializeMobileNavigation() {
   console.log('Initializing mobile button navigation');
@@ -327,52 +415,18 @@ function initializeMobileNavigation() {
     currentMobileStep = 0;
   }
 
-  // Create navigation buttons
-  const navContainer = document.createElement('div');
-  navContainer.className = 'mobile-nav';
+  // Create navigation buttons (shared helper)
+  const buttons = createNavigationButtons();
+  if (!buttons) return; // Already initialized
 
-  const prevButton = document.createElement('button');
-  prevButton.className = 'mobile-prev';
-  prevButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor"><path d="M440-160v-487L216-423l-56-57 320-320 320 320-56 57-224-224v487h-80Z"/></svg>';
-  prevButton.setAttribute('aria-label', 'Previous step');
-
-  const nextButton = document.createElement('button');
-  nextButton.className = 'mobile-next';
-  nextButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor"><path d="M440-800v487L216-537l-56 57 320 320 320-320-56-57-224 224v-487h-80Z"/></svg>';
-  nextButton.setAttribute('aria-label', 'Next step');
-
-  navContainer.appendChild(prevButton);
-  navContainer.appendChild(nextButton);
-  document.body.appendChild(navContainer);
-
-  // Store button references
-  mobileNavButtons = { prev: prevButton, next: nextButton };
+  mobileNavButtons = { prev: buttons.prev, next: buttons.next };
 
   // Add click handlers
-  prevButton.addEventListener('click', goToPreviousMobileStep);
-  nextButton.addEventListener('click', goToNextMobileStep);
+  buttons.prev.addEventListener('click', goToPreviousMobileStep);
+  buttons.next.addEventListener('click', goToNextMobileStep);
 
   // Initialize button states
   updateMobileButtonStates();
-
-  // Initialize viewer for first object
-  const firstObjectId = window.storyData?.firstObject;
-  if (firstObjectId) {
-    const firstRealStep = (window.storyData?.steps || []).find(step => step.object === firstObjectId);
-    if (firstRealStep) {
-      const x = parseFloat(firstRealStep.x);
-      const y = parseFloat(firstRealStep.y);
-      const zoom = parseFloat(firstRealStep.zoom);
-
-      // Position the first viewer
-      const viewerCard = createViewerCard(firstObjectId, 1, x, y, zoom);
-      if (viewerCard) {
-        currentViewerCard = viewerCard;
-        viewerCard.element.classList.remove('card-below');
-        viewerCard.element.classList.add('card-active');
-      }
-    }
-  }
 
   console.log(`Mobile navigation initialized with ${allSteps.length} steps`);
 }
@@ -565,8 +619,14 @@ function initializeStepController() {
   // Keyboard navigation
   document.addEventListener('keydown', handleKeyboard);
 
-  // Scroll accumulator
+  // Scroll accumulator for mouse/trackpad
   window.addEventListener('wheel', handleScroll, { passive: false });
+
+  // Touch navigation for iPad/tablets in desktop mode (v0.4.3)
+  // Enables swipe-to-navigate on touch devices that don't trigger 'wheel' events
+  // Uses passive listeners for better scroll performance
+  window.addEventListener('touchstart', handleTouchStart, { passive: true });
+  window.addEventListener('touchend', handleTouchEnd, { passive: true });
 
   console.log(`Step controller initialized with ${allSteps.length} steps`);
 }
@@ -741,6 +801,64 @@ function handleScroll(e) {
   } else if (scrollAccumulator <= -SCROLL_THRESHOLD) {
     prevStep();
     scrollAccumulator = 0;
+  }
+}
+
+/**
+ * Handle touch start for iPad/tablet swipe navigation (v0.4.3)
+ *
+ * Records the Y coordinate where the touch began. This coordinate is later
+ * compared with the touch end position to determine swipe direction and distance.
+ *
+ * Context: The 'wheel' event works for mouse/trackpad but doesn't fire on iPad
+ * when users scroll with touch. This touch handler enables natural swipe navigation
+ * on touch devices in desktop viewport mode.
+ *
+ * @param {TouchEvent} e - Touch start event
+ */
+function handleTouchStart(e) {
+  touchStartY = e.touches[0].clientY;
+}
+
+/**
+ * Handle touch end for iPad/tablet swipe navigation (v0.4.3)
+ *
+ * Calculates swipe distance and direction to trigger step navigation:
+ * - Swipe UP (like scrolling down) → advances to next step
+ * - Swipe DOWN (like scrolling up) → returns to previous step
+ *
+ * Respects the same cooldown period as wheel scrolling to prevent rapid
+ * step changes during animations. Requires minimum 20vh swipe distance
+ * to distinguish intentional navigation from small touch movements.
+ *
+ * Note: Touch events are only active in desktop viewport mode. Mobile
+ * viewports (<768px) use button-based navigation instead.
+ *
+ * Thanks to Makoto for revealing this issue on iPad.
+ *
+ * @param {TouchEvent} e - Touch end event
+ */
+function handleTouchEnd(e) {
+  touchEndY = e.changedTouches[0].clientY;
+
+  const now = Date.now();
+  const timeSinceLastChange = now - lastStepChangeTime;
+
+  // Respect cooldown period to prevent rapid step changes during animations
+  if (timeSinceLastChange < STEP_COOLDOWN) {
+    return;
+  }
+
+  // Calculate swipe distance (positive = swipe down, negative = swipe up)
+  const swipeDistance = touchEndY - touchStartY;
+
+  // Swipe up (negative distance) = next step (mimics scroll down behavior)
+  if (swipeDistance < -TOUCH_THRESHOLD) {
+    nextStep();
+  }
+  // Swipe down (positive distance) = previous step (mimics scroll up behavior)
+  else if (swipeDistance > TOUCH_THRESHOLD) {
+    prevStep();
   }
 }
 
