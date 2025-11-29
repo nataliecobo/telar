@@ -4,118 +4,118 @@ title: Upgrade Summary
 ---
 
 ## Upgrade Summary
-- **From:** 0.4.3-beta
-- **To:** 0.5.0-beta
-- **Date:** 2025-11-18
-- **Automated changes:** 36
-- **Manual steps:** 6
+- **From:** 0.5.0-beta
+- **To:** 0.6.0-beta
+- **Date:** 2025-11-29
+- **Automated changes:** 66
+- **Manual steps:** 3
 
 ## Automated Changes Applied
 
-### Configuration (1 file)
+### Configuration (2 files)
 
-- [x] Updated _config.yml: version 0.5.0-beta (2025-11-18)
+- [x] Updated _data/navigation.yml: Bilingual navigation menu configuration (NEW)
+- [x] Updated _config.yml: version 0.6.0-beta (2025-11-29)
 
-### Layouts (3 files)
+### Layouts (6 files)
 
-- [x] Updated _layouts/story.html: Embed mode support, share button
-- [x] Updated _layouts/index.html: Share button in navbar
-- [x] Updated _layouts/default.html: Share panel modal
+- [x] Updated _layouts/story.html: Credit prefix exposure, byline markdown support
+- [x] Updated _layouts/default.html: Multilingual support
+- [x] Updated _layouts/user-page.html: Custom pages layout (NEW)
+- [x] Updated _layouts/objects-index.html: Object ordering bug fix
+- [x] Updated _layouts/index.html: Logo display removed
+- [x] Updated _layouts/glossary.html: Demo badge text fix
 
-### Includes (4 files)
+### Includes (2 files)
 
-- [x] Updated _includes/share-button.html: Share button component
-- [x] Updated _includes/share-panel.html: Share/embed modal
-- [x] Updated _includes/header.html: Navbar share button
-- [x] Updated _includes/panels.html: Mobile image width fix
+- [x] Updated _includes/header.html: Data-driven navigation, logo CSS
+- [x] Updated _includes/viewer.html: Object credits badge HTML/CSS
 
 ### Styles (1 file)
 
-- [x] Updated assets/css/telar.scss: Embed mode, share UI, carousel, mobile fixes
+- [x] Updated assets/css/telar.scss: Logo, panel freeze, tab widget, glossary, credits badge
 
-### Scripts (7 files)
+### Scripts (8 files)
 
-- [x] Removed unused file: assets/js/scrollama.min.js
-- [x] Removed unused file: assets/js/openseadragon.min.js
-- [x] Updated scripts/csv_to_json.py: CSV-driven processing, flattened paths
-- [x] Updated scripts/generate_iiif.py: Extended format support, case-insensitive
-- [x] Updated assets/js/embed.js: Embed mode detection and banner
-- [x] Updated assets/js/share-panel.js: Share/embed functionality
-- [x] Updated assets/js/story.js: Embed navigation, panel fixes
+- [x] Updated scripts/csv_to_json.py: Demo content processing, bilingual CSV support, story_id
+- [x] Updated scripts/fetch_demo_content.py: Demo content bundle fetcher (NEW)
+- [x] Updated scripts/generate_collections.py: Custom pages support, demo glossary
+- [x] Updated scripts/fetch_google_sheets.py: Bilingual tab support, story_id support
+- [x] Updated scripts/discover_sheet_gids.py: Story_id support
+- [x] Updated scripts/generate_iiif.py: Version header update
+- [x] Updated assets/js/story.js: Panel freeze system, credits badge, viewer scroll isolation
+- [x] Updated assets/js/telar.js: Glossary link handling, click-outside-to-close
 
-### Documentation (7 files)
+### Documentation (1 file)
 
-- [x] Removed deprecated directory: docs/google_sheets_integration
-- [x] Updated README.md: v0.5.0 documentation
-- [x] Updated components/README.md: Updated directory structure
-- [x] Updated components/images/README.md: Flattened structure documentation
-- [x] Updated components/pdfs/README.md: Future v0.6.0 placeholder
-- [x] Updated components/audio/README.md: Future v0.7.0 placeholder
-- [x] Updated components/3d-models/README.md: Future v0.8.0 placeholder
+- [x] Updated README.md: v0.6.0 documentation
 
-### Other (13 files)
+### Other (46 files)
 
-- [x] Discovered 0 CSV-referenced images
-- [x] Found 0 image references in .md files
-- [x] Removed empty directory: components/images/objects
-- [x] Removed empty directory: components/images/additional
-- [x] Migrated 8 images to flat structure
-- [x] No image path updates needed
-- [x] Updated objects.csv: Renamed 'iiif_manifest' column to 'source_url'
-- [x] Created directory: components/pdfs
-- [x] Created directory: components/audio
-- [x] Created directory: components/3d-models
-- [x] Updated _data/languages/en.yml: Share/embed strings, updated error messages
-- [x] Updated _data/languages/es.yml: Spanish translations
-- [x] Updated CHANGELOG.md: v0.5.0 changelog
+- [x] Created directory: components/texts/pages/
+- [x] Created directory: components/texts/stories/your-story/
+- [x] Created directory: components/texts/stories/tu-historia/
+- [x] Moved pages/about.md → components/texts/pages/about.md
+- [x] Added generated JSON patterns to .gitignore
+- [x] Added _jekyll-files/ to .gitignore
+- [x] Added demo glossary pattern to .gitignore
+- [x] Removed _jekyll-files/ from git tracking
+- [x] Removed 5 generated file(s) from git tracking
+- [x] Removed v0.5.0 example file: components/images/ampl-logo.png
+- [x] ℹ️  Kept 2 v0.5.0 example files (still referenced in Google Sheet)
+- [x]   • components/structures/story-1.csv
+- [x]   • components/structures/story-2.csv
+- [x] ✓ Removed 1 v0.5.0 example files (not in use)
+- [x] ℹ️  Your custom content is preserved
+- [x] Updated _data/languages/en.yml: Credit prefix, updated strings
+- [x] Updated _data/languages/es.yml: Spanish translations, credit prefix
+- [x] Updated CHANGELOG.md: v0.6.0 changelog
+- [x] Updated .gitignore: Generated files gitignored
+- [x] Updated components/texts/stories/your-story/about-coordinates.md: Coordinate system explanation
+- [x] Updated components/texts/stories/your-story/guiding-attention.md: Question/Answer/Invitation pattern
+- [x] Updated components/texts/stories/your-story/building-argument.md: Coordinate sequences as argument
+- [x] Updated components/texts/stories/your-story/visual-rhetoric.md: Visual contrast analysis
+- [x] Updated components/texts/stories/your-story/the-reveal.md: Full view synthesis
+- [x] Updated components/texts/stories/your-story/progressive-disclosure.md: Layer 2 panel explanation
+- [x] Updated components/texts/stories/your-story/ruler-place.md: Charles III marginalized position
+- [x] Updated components/texts/stories/your-story/multiple-images.md: IIIF vs self-hosted comparison
+- [x] Updated components/texts/stories/your-story/whats-next.md: Template overview
+- [x] Updated components/texts/stories/tu-historia/acerca-de-coordenadas.md: Sistema de coordenadas
+- [x] Updated components/texts/stories/tu-historia/guiar-atencion.md: Patrón Pregunta/Respuesta/Invitación
+- [x] Updated components/texts/stories/tu-historia/construir-argumento.md: Secuencias como argumento
+- [x] Updated components/texts/stories/tu-historia/retorica-visual.md: Análisis de contraste visual
+- [x] Updated components/texts/stories/tu-historia/la-revelacion.md: Síntesis de vista completa
+- [x] ⚠️  Warning: Could not fetch components/texts/stories/tu-historia/divulgacion-progresiva.md from GitHub
+- [x] Updated components/texts/stories/tu-historia/lugar-gobernante.md: Posición marginalizada
+- [x] Updated components/texts/stories/tu-historia/multiples-imagenes.md: Comparación IIIF vs autoalojadas
+- [x] Updated components/texts/stories/tu-historia/que-sigue.md: Resumen de plantilla
+- [x] Updated components/texts/glossary/story.md: Story glossary entry
+- [x] Updated components/texts/glossary/step.md: Step glossary entry
+- [x] Updated components/texts/glossary/viewer.md: Viewer glossary entry
+- [x] Updated components/texts/glossary/panel.md: Panel glossary entry
+- [x] Updated components/texts/glossary/historia.md: Historia glossary entry
+- [x] Updated components/texts/glossary/paso.md: Paso glossary entry
+- [x] Updated components/texts/glossary/visor.md: Visor glossary entry
+- [x] Updated components/texts/glossary/panel-es.md: Panel-es glossary entry
+- [x] ⚠️  Warning: Could not fetch components/images/leviathan.jpg from GitHub
 
 ## Manual Steps Required
 
 Please complete these after merging:
 
-1. ⚠️ **CRITICAL: Update Your GitHub Actions Workflows** ⚠️
+1. **If you use GitHub Pages:**
 
-**Without this step, images will NOT display on your published site.**
+No further actions needed. GitHub Actions will automatically rebuild your site with the upgraded framework.
+2. **If you work with your site locally:**
 
-The upgrade changed where images are stored, but your GitHub Actions workflows still point to the old location. You must update two files: `build.yml` and `upgrade.yml`.
+1. Regenerate data files: `python3 scripts/csv_to_json.py && python3 scripts/generate_collections.py`
+2. Test your site build: `bundle exec jekyll build`
+3. **Optional (all users):**
 
----
-
-**Option 1: Using the GitHub Website**
-
-1. Go to the Telar repository workflows: https://github.com/UCSB-AMPLab/telar/tree/main/.github/workflows
-2. Click on `build.yml`, then click the "Raw" button, and copy all the text
-3. In **your** repository on GitHub, go to `.github/workflows/build.yml`
-4. Click the pencil icon (✏️) to edit, delete everything, and paste the new content
-5. Click "Commit changes" at the bottom
-6. Repeat steps 2-5 for `upgrade.yml`
-
----
-
-**Option 2: Using the Command Line** (if you've been syncing your repository to your machine and are comfortable with git)
-
-Run these commands in your repository:
-
-```bash
-# Download the updated workflows
-curl -o .github/workflows/build.yml https://raw.githubusercontent.com/UCSB-AMPLab/telar/main/.github/workflows/build.yml
-curl -o .github/workflows/upgrade.yml https://raw.githubusercontent.com/UCSB-AMPLab/telar/main/.github/workflows/upgrade.yml
-
-# Commit the changes
-git add .github/workflows/
-git commit -m "Update workflows for v0.5.0 image structure"
-git push
-```
-
-**That's it!** Your next build will use the correct image locations. ([guide](https://github.com/UCSB-AMPLab/telar/tree/main/.github/workflows))
-2. Regenerate IIIF tiles to ensure images work with new structure: python3 scripts/generate_iiif.py
-3. Test your site build: bundle exec jekyll build
-4. Test embed mode: Add ?embed=true to any story URL to see the embed mode UI with navigation banner
-5. Explore new share/embed UI: Click the share button (icon with arrow) on stories or homepage to access share links and embed code
-6. Optional: Install pillow-heif for HEIC/HEIF support (iPhone photos). Run: pip install pillow-heif. The framework gracefully degrades if not installed, converting HEIC to standard formats.
+Enable demo content by setting `include_demo_content: true` in `_config.yml` under `story_interface`. Demo content will be automatically fetched during the build process.
 
 ## Resources
 
-- [Full Documentation](https://ampl.clair.ucsb.edu/telar-docs)
+- [Full Documentation](https://telar.org/docs)
 - [CHANGELOG](https://github.com/UCSB-AMPLab/telar/blob/main/CHANGELOG.md)
 - [Report Issues](https://github.com/UCSB-AMPLab/telar/issues)
