@@ -97,8 +97,8 @@ show_drafts: false
 
 # Telar Settings (version information)
 telar:
-  version: "0.6.1-beta"
-  release_date: "2025-11-29"
+  version: "0.6.2-beta"
+  release_date: "2025-12-04"
 
 # Plugins
 plugins:
@@ -113,7 +113,7 @@ webrick:
 
 # Development & Testing
 # Set to false or remove for production use
-testing-features:
+development-features:
   # Christmas Tree Mode - Displays all warning messages for testing multilingual support
   # Set to true to light up the site with test warnings (test objects, fake errors, etc.)
   christmas_tree_mode: false
